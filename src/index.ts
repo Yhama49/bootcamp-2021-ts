@@ -81,24 +81,35 @@ const items: Item[] = [
 //
 
 function createInputRow(item: Item) {
+  if(item.placeholder == undefined){
+    item.placeholder = ''
+  }
+  const inputTag:string = createInputTag(item);
   return `
     <tr>
-      <th>
+      <th>${item.label}
       </th>
       <td>
-        <input />
+        ${inputTag}
       </td>
     </tr>
   `;
 }
 
 function createSelectRow(item: Item) {
+  let optionTag:string = '';
+  if(item.options){
+    for(let i = 0;i < item.options.length; i++){
+      optionTag += `<option value=${item.options[i].value}>${item.options[i].text}</option>`
+    }
+  }
   return `
     <tr>
-      <th>
+      <th>${item.label}
       </th>
       <td>
         <select>
+        ${optionTag}
         </select>
       </td>
     </tr>
@@ -108,13 +119,25 @@ function createSelectRow(item: Item) {
 function createTextAreaRow(item: Item) {
   return `
     <tr>
-      <th>
+      <th>${item.label}
       </th>
       <td>
-        <textarea></textarea>
+        <textarea placeholder= ${item.placeholder}></textarea>
       </td>
     </tr>
   `;
+}
+
+function createInputTag(item: Item) {
+  if(item.values){
+    let inputTag:string = '';
+    for(let i = 0;i < item.values.length; i++){
+      inputTag += `<input type=${item.type} placeholder= ${item.placeholder} value=${item.values[i].value}>${item.values[i].label}　`
+    }
+    return inputTag;
+  }else{
+    return `<input type=${item.type} placeholder= ${item.placeholder} >`;
+  }
 }
 
 function createTable() {
@@ -135,7 +158,10 @@ function createTable() {
 
 function createFormDom() {
   const form = document.getElementById("form");
-  form.innerHTML = createTable();
+  if(form){
+    form.innerHTML = createTable();
+  }
 }
 
 createFormDom();
+
